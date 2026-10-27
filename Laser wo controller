@@ -1,6 +1,5 @@
 import machine
 import time
-button = machine.Pin(16, machine.Pin.IN)
 led_onboard = machine.Pin(15, machine.Pin.OUT)
 while True:
     ps = input("enter on value(0 or 1): ")
