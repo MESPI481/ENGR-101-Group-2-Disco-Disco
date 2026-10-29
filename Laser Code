@@ -1,0 +1,45 @@
+import machine
+import time
+import math
+laser1 = machine.Pin(0, machine.Pin.OUT)
+laser2 = machine.Pin(1, machine.Pin.OUT)
+laser3 = machine.Pin(2, machine.Pin.OUT)
+laser4 = machine.Pin(3, machine.Pin.OUT)
+laser5 = machine.Pin(4, machine.Pin.OUT)
+laser6 = machine.Pin(5, machine.Pin.OUT)
+laser7 = machine.Pin(6, machine.Pin.OUT)
+laser8 = machine.Pin(7, machine.Pin.OUT)
+laser9 = machine.Pin(8, machine.Pin.OUT)
+laser10 = machine.Pin(9, machine.Pin.OUT)
+
+multiplier = 95
+counter = 0
+while True:
+    counter += 0.2
+    print(counter)
+    hertzlevel = math.sin(counter) * multiplier
+    print(hertzlevel)
+    print()
+    if hertzlevel >50:
+        laser1.value(1)
+        if hertzlevel >70:
+            laser2.value(1)
+            if hertzlevel >90:
+               laser3>value(1)
+           else: 
+               laser3.value(0)
+      else:
+          laser2.value(0)
+          laser3.value(0)
+  else:
+      laser1.value(0)
+      laser2.value(0)
+      laser3.value(0)
+
+
+
+
+time.sleep(0.05)
+#laser1.value(0)
+#laser2.value(0)
+#laser3.value(0)
