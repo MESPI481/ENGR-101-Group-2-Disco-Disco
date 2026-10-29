@@ -1,0 +1,26 @@
+import network
+import socket
+a=0
+ap = network.WLAN(network.AP_IF)
+ap.config(essid="wifi1" ,password="hillaryisthebest")
+ap.active(True)
+ap.connect("wifi1","hillaryisthebest")
+print(ap.ifconfig()[0])
+address = socket.getaddrinfo("0.0.0.0", 80)[0][-1]
+server = socket.socket()
+server.bind(address)
+server.listen(1)
+html = """
+<button>LED ON</button>
+<button>LED OFF</button>"""
+while True:
+    client, addr = server.accept()
+    request = client.recv(1024)
+    if b'/on' in request:
+        a = 1
+        print(a)
+    elif b'/off' in request:
+        a = -1
+        print(a)
+    client.send('HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n')
+    client.send(html)
