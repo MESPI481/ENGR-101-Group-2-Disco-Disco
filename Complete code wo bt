@@ -1,0 +1,46 @@
+import machine
+import time
+from machine import Pin, PWM
+from machine import Pin
+import utime
+from time import sleep
+
+led_onboard = machine.Pin(17, machine.Pin.OUT)
+servo = PWM(Pin(16))
+pwm = PWM(Pin(15))
+
+servo.freq(200)
+
+def move_slow(start, end, step=1, delay=0.01):
+    if start < end:
+        angles = range(start, end + 1, step)
+    else:
+        angles = range(start, end - 1, -step)
+    for a in angles:
+        set_angle(a)
+        sleep(delay)
+
+def set_angle(angle):
+    pulse = int(500000 + (angle/180) *2000000)
+    servo.duty_ns(pulse)
+
+while True:
+    ps = input("LED enter on value(0 or 1): ")
+    if ps == "1":
+        led_onboard.value(1)
+    else :
+        led_onboard.value(0)
+    ss=input("Speaker (0 or 1 or 2 or 3)>")
+    if ss == "1":
+        pwm.freq(200)
+        pwm.duty_u16(32768)
+    elif ss == "2":
+        pwm.freq(150)
+        pwm.duty_u16(32768)
+    elif ss == "3":
+        pwm.freq(75)
+        pwm.duty_u16(32768)# Set frequency to 1kHz
+    else:
+        pwm.freq(0)
+        pwm.duty_u16(0)
+    p=input("Servo(0 or 1)>")
