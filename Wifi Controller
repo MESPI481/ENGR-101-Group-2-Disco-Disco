@@ -1,39 +1,98 @@
 import network
 import socket
+import machine
+import time
+from machine import Pin, PWM
+from machine import Pin
+import utime
+from time import sleep
+
+
 a=0
 ap = network.WLAN(network.AP_IF)
 ap.config(essid="wifi1", password="hillaryisthebest")
 ap.active(True)
 print(ap.ifconfig()[0])
+
+led_onboard = machine.Pin(17, machine.Pin.OUT)
+servo = PWM(Pin(16))
+pwm = PWM(Pin(15))
+
+servo.freq(50)
+pwm.duty_u16(0)
+
+def move_slow(start, end, step=1, delay=0.001):
+    if start < end:
+        angles = range(start, end + 1, step)
+    else:
+        angles = range(start, end -1, -step)
+    for a in angles:
+        set_angle(a)
+        sleep(delay)
+        
+def set_angle(angle):
+    pulse = int(500000 + (angle / 180) * 20000000)
+    servo.duty_ns(pulse)
+    
 address = socket.getaddrinfo("0.0.0.0", 80)[0][-1]
 server = socket.socket()
+server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 server.bind(address)
 server.listen(1)
-html = """
-<button>LED ON</button>
-<button>LED OFF</button>
 
+
+html = """
+<button onclick="location.href='/ledon'">LED ON</button>
+<button onclick="location.href='/ledoff'">LED OFF</button>
 
 <button>LASER ON</button>
 <button>LASER OFF</button>
 
+<button onclick="location.href='/servoon'">SERVO ON</button>
+<button onclick="location.href='/servooff'">SERVO OFF</button>
 
-<button>SERVO ON</button>
-<button>SERVO OFF</button>
+<button onclick="location.href='/speaker1'">SPEAKER-SETTING ON1</button>
+<button onclick="location.href='/speaker2'">SPEAKER-SETTING ON2</button>
+<button onclick="location.href='/speaker3'">SPEAKER-SETTING ON3</button>
+<button onclick="location.href='/speakeroff'">SPEAKER-SETTING OFF</button>"""
 
+print("Waiting for phone connection...")
 
-<button>SPEAKER-SETTING ON1</button>
-<button>SPEAKER-SETTING ON2</button>
-<button>SPEAKER-SETTING ON3</button>
-<button>SPEAKER-SETTING OFF</button>"""
 while True:
     client, addr = server.accept()
     request = client.recv(1024)
-    if b'/on' in request:
+    
+    if b'/ledon' in request:
         a = 1
+        led_onboard.value(1)
         print(a)
-    elif b'/off' in request:
+        
+    elif b'/ledoff' in request:
         a = -1
+        led_onboard.value(0)
         print(a)
+    
+    elif b'/servoon' in request:
+        move_slow(0, 90)
+
+    elif b'/servooff' in request:
+        move_slow(90, 0)
+
+    elif b'/speaker1' in request:
+        pwm.freq(200)
+        pwm.duty_u16(32768)
+
+    elif b'/speaker2' in request:
+        pwm.freq(150)
+        pwm.duty_u16(32768)
+
+    elif b'/speaker3' in request:
+        pwm.freq(75)
+        pwm.duty_u16(32768)
+
+    elif b'/speakeroff' in request:
+        pwm.duty_u16(0)
+
     client.send('HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n')
-    client.send(html)
+    client.sendall(html.encode())
+    client.close()
