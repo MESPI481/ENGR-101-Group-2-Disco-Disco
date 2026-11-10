@@ -21,7 +21,7 @@ pwm = PWM(Pin(15))
 servo.freq(50)
 pwm.duty_u16(0)
 
-def move_slow(start, end, step=1, delay=0.001):
+def move_slow(start, end, step=1, delay=0.05):
     if start < end:
         angles = range(start, end + 1, step)
     else:
@@ -51,7 +51,7 @@ html = """
 <button onclick="location.href='/servoon'">SERVO ON</button>
 <button onclick="location.href='/servooff'">SERVO OFF</button>
 
-<button onclick="location.href='/speaker1'">SPEAKER-SETTING ON1</button>
+<button style="width:200px; height:200px;" onclick="location.href='/speaker1'">SPEAKER-SETTING ON1</button>
 <button onclick="location.href='/speaker2'">SPEAKER-SETTING ON2</button>
 <button onclick="location.href='/speaker3'">SPEAKER-SETTING ON3</button>
 <button onclick="location.href='/speakeroff'">SPEAKER-SETTING OFF</button>"""
