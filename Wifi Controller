@@ -42,19 +42,39 @@ server.listen(1)
 
 
 html = """
-<button onclick="location.href='/ledon'">LED ON</button>
-<button onclick="location.href='/ledoff'">LED OFF</button>
+<html>
+<head>
+<style>
+button {
+    width: 400px;
+    height: 400px;
+    font-size: 40px;
+    font-family: 'Times New Roman', serif;
+    background-color: pink;
+    color: #8B3A62;
+    border-radius: 20px;
+    border: none;
+    margin: 5px;
+}
+</style>
+</head>
 
-<button>LASER ON</button>
-<button>LASER OFF</button>
+<body>
+
+<button onclick="location.href='/laseron'">LASER ON</button>
+<button onclick="location.href='/laseroff'">LASER OFF</button>
 
 <button onclick="location.href='/servoon'">SERVO ON</button>
 <button onclick="location.href='/servooff'">SERVO OFF</button>
 
-<button style="width:200px; height:200px;" onclick="location.href='/speaker1'">SPEAKER-SETTING ON1</button>
+<button onclick="location.href='/speaker1'">SPEAKER-SETTING ON1</button>
 <button onclick="location.href='/speaker2'">SPEAKER-SETTING ON2</button>
 <button onclick="location.href='/speaker3'">SPEAKER-SETTING ON3</button>
-<button onclick="location.href='/speakeroff'">SPEAKER-SETTING OFF</button>"""
+<button onclick="location.href='/speakeroff'">SPEAKER-SETTING OFF</button>
+
+</body>
+</html>
+"""
 
 print("Waiting for phone connection...")
 
@@ -62,12 +82,12 @@ while True:
     client, addr = server.accept()
     request = client.recv(1024)
     
-    if b'/ledon' in request:
+    if b'/laseron' in request:
         a = 1
         led_onboard.value(1)
         print(a)
         
-    elif b'/ledoff' in request:
+    elif b'/laseroff' in request:
         a = -1
         led_onboard.value(0)
         print(a)
