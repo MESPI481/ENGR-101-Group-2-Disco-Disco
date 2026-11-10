@@ -1,0 +1,13 @@
+import machine
+import time 
+led_onboard = machine.Pin(15, machine.Pin.OUT)
+while True:
+    ps = input("enter on value(0 or 1): ")
+    if ps == "1":
+        led_onboard.value(1)
+    else :
+         led_onboard.value(0)
+    # led_onboard.value(1)
+     #time.sleep(2)
+     #led_onboard.value(0)
+     #time.sleep(2)
